@@ -5,7 +5,7 @@
  * by Yanwen Chen
  *
  * Initiated: 5/22/22
- * Last updated: 5/26/22
+ * Last updated: 5/29/22
  *
  * CITATIONS:
  *   IMAGES:
@@ -42,9 +42,7 @@
  *
  * NOTE:
  *
- *
- *
- * Instruction: Click the screen and follow the instructions when needed
+ * INSTRUCTION: Click the screen and follow the instructions when needed
  *
  *
  * */
