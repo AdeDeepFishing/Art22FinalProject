@@ -38,9 +38,10 @@
  *      https://github.com/iramore22/flappy_bird_processing
  *      https://www.youtube.com/watch?v=OMoVcohRgZA
  *      https://www.youtube.com/watch?v=CD4qAhfFuLo
- *      
+ *
  *
  * NOTE:
+ *
  *
  *
  * Instruction: Click the screen and follow the instructions when needed
@@ -48,22 +49,76 @@
  *
  * */
 
-PImage intro, youngMe, youngeMeAndBros, tv, background, congratsMinions, cryingMeme, tvSpongeBob, tvTiga, tvKitchener, waitASecPandaHead, cantonTower, happyMinions, holdBabebro, babyBroSitting, babyBroKissing, zhongkao0, zhongkao1, zhongkao2, bookbackground, jerryReading0, jerryReading1, jerryReading2, tomAndJerryReading, testSAT, intern, offer, ucsbConfirmed, questionPandaHead0, questionPandaHead1, noPandaHead0, noPandaHead1, noPandaHead2, zoom, cantonTowerDayView, suitcase, passport, LAXView, ucsbLife, painting, waitASecPandaHead1, girlsNight, gayCrush0, gayCrush1, gayCrush2, gayCrush3, cuteGuysCheck, thankUMinions, theEnd;
+PImage intro, youngMe, youngeMeAndBros, tv, rule1, congratsMinions, cryingMeme, tvSpongeBob, tvTiga, tvKitchener, waitASecPandaHead, cantonTower, happyMinions, holdBabebro, babyBroSitting, babyBroKissing, zhongkao0, zhongkao1, zhongkao2, rule2, jerryReading0, jerryReading1, jerryReading2, tomAndJerryReading, testSAT, intern, offer, ucsbConfirmed, questionPandaHead0, questionPandaHead1, noPandaHead0, noPandaHead1, noPandaHead2, zoom, cantonTowerDayView, suitcase, passport, LAXView, ucsbLife, painting, waitASecPandaHead1, girlsNight, gayCrush0, gayCrush1, gayCrush2, gayCrush3, cuteGuysCheck, thankUMinions, theEnd;
+
+
+//bird scene, also called as backgroundscene
+float xpos = 200;
+float ypos = 50;
+float vy = 0;
+float gravity = .2;
+float bounce = -10;
+PImage bird, wall, background;
+int count = 300;
+WallPair[] walls = new WallPair[4];
+boolean lose = false;
+int score = 0;
+PFont flappyFont;
+float[] wallsOffset = new float[4];
+//end of bird scene
+
+
+//snake scene
+//snake size
+int w = 25;
+int h = 25;
+int snakeLength = 1;
+int maxSnakeLength = 800;
+int snakeHeadX;
+int snakeHeadY;
+char snakeDirection = 'R';
+//space of location of snake body
+int[] x = new int[maxSnakeLength];
+int[] y = new int[maxSnakeLength];
+//others
+boolean foodKey = true;
+int foodX;
+int foodY;
+int bestScore = snakeLength;
+boolean gameOverKey = false;
+//end of snake scene
+
 
 enum Scene {
-  INTROSCENE, YOUNGMESCENE, YOUNGEMEANDBROSSCENE, TVSCENE, BACKGROUNDSCENE, CONGRATSMINIONSSCENE, CRYINGMEMESCENE, TVSPONGEBOBSCENE, TVTIGASCENE, TVKITCHENERSCENE, WAITASECPANDAHEADSCENE, CANTONTOWERSCENE, HAPPYMINIONSSCENE, HOLDBABEBROSCENE, BABYBROSITTINGSCENE, BABYBROKISSINGSCENE, ZHONGKAO0SCENE, ZHONGKAO1SCENE, ZHONGKAO2SCENE, BOOKBACKGROUNDSCENE, WAITASECPANDAHEADANOTHERSCENE, JERRYREADING0SCENE, JERRYREADING1SCENE, JERRYREADING2SCENE, TOMANDJERRYREADINGSCENE, TESTSATSCENE, INTERNSCENE, OFFERSCENE, UCSBCONFIRMEDSCENE, QUESTIONPANDAHEAD0SCENE, QUESTIONPANDAHEAD1SCENE, NOPANDAHEAD0SCENE, NOPANDAHEAD1SCENE, NOPANDAHEAD2SCENE, ZOOMSCENE, CANTONTOWERDAYVIEWSCENE, SUITECASESCENE, PASSPORTSCENE, LAXVIEWSCENE, UCSBLIFESCENE, PAINTINGSCENE, WAITASECPANDAHEAD1SCENE, GIRLSNIGHTSCENE, GAYCRUSH0SCENE, GAYCRUSH1SCENE, GAYCRUSH2SCENE, GAYCRUSH3SCENE, CUTEGUYSCHECKSCENE, WAITASECPANDAHEAD1ANOTHERSCENE, THANKUMINIONSSCENE, THEENDSCENE;
+  INTROSCENE, YOUNGMESCENE, YOUNGEMEANDBROSSCENE, TVSCENE, RULE1SCENE, BACKGROUNDSCENE, CONGRATSMINIONSSCENE, CRYINGMEMESCENE, TVSPONGEBOBSCENE, TVTIGASCENE, TVKITCHENERSCENE, WAITASECPANDAHEADSCENE, CANTONTOWERSCENE, HAPPYMINIONSSCENE, HOLDBABEBROSCENE, BABYBROSITTINGSCENE, BABYBROKISSINGSCENE, ZHONGKAO0SCENE, ZHONGKAO1SCENE, ZHONGKAO2SCENE, RULE2SCENE, BOOKBACKGROUNDSCENE, WAITASECPANDAHEADANOTHERSCENE, JERRYREADING0SCENE, JERRYREADING1SCENE, JERRYREADING2SCENE, TOMANDJERRYREADINGSCENE, TESTSATSCENE, INTERNSCENE, OFFERSCENE, UCSBCONFIRMEDSCENE, QUESTIONPANDAHEAD0SCENE, QUESTIONPANDAHEAD1SCENE, NOPANDAHEAD0SCENE, NOPANDAHEAD1SCENE, NOPANDAHEAD2SCENE, ZOOMSCENE, CANTONTOWERDAYVIEWSCENE, SUITECASESCENE, PASSPORTSCENE, LAXVIEWSCENE, UCSBLIFESCENE, PAINTINGSCENE, WAITASECPANDAHEAD1SCENE, GIRLSNIGHTSCENE, GAYCRUSH0SCENE, GAYCRUSH1SCENE, GAYCRUSH2SCENE, GAYCRUSH3SCENE, CUTEGUYSCHECKSCENE, WAITASECPANDAHEAD1ANOTHERSCENE, THANKUMINIONSSCENE, THEENDSCENE;
 };
 
+//start with introscene
 Scene scene = Scene.INTROSCENE;
 
 void setup() {
   size(800, 800);
+
   //tons of images here
   intro=loadImage("Untitled_Artwork 55.png");
   youngMe=loadImage("Untitled_Artwork 54.png");
   youngeMeAndBros=loadImage("Untitled_Artwork 53.png");
   tv=loadImage("Untitled_Artwork 52.png");
+  rule1=loadImage("Untitled_Artwork 51.png");
+
+  //bird scene
+  bird = loadImage("bird1.jpg");
   background = loadImage("back.png");
+  wall = loadImage("truba.png");
+  flappyFont = createFont("04B_19__.TTF", 38.0, true);
+  fill(255);
+  textFont(flappyFont);
+  textAlign(LEFT, TOP);
+  for (int i = 0; i < wallsOffset.length; i++) {
+    wallsOffset[i] = random(-100, 100);
+  }
+  //end of bird scene
+
   congratsMinions=loadImage("Untitled_Artwork 50.png");
   cryingMeme=loadImage("Untitled_Artwork 49.png");
   tvSpongeBob=loadImage("Untitled_Artwork 48.png");
@@ -78,7 +133,11 @@ void setup() {
   zhongkao0=loadImage("Untitled_Artwork 39.png");
   zhongkao1=loadImage("Untitled_Artwork 38.png");
   zhongkao2=loadImage("Untitled_Artwork 37.png");
-  bookbackground=loadImage("Untitled_Artwork 36.png");
+  rule2=loadImage("Untitled_Artwork 36.png");
+  //snake scene
+  noStroke();
+  //end of snake scene
+
   jerryReading0=loadImage("Untitled_Artwork 34.png");
   jerryReading1=loadImage("Untitled_Artwork 33.png");
   jerryReading2=loadImage("Untitled_Artwork 32.png");
@@ -125,12 +184,31 @@ void draw() {
   case TVSCENE:
     image(tv, 0, 0);
     break;
+  case RULE1SCENE:
+    image(rule1, 0, 0);
+    break;
   case BACKGROUNDSCENE:
     image(background, 0, 0);
-
-    //scene = Scene.CONGRATSMINIONSSCENE;
-    //scene = Scene.CRYINGMEMESCENE;
-
+    if (!lose ) {
+      count++;
+    }
+    drawBackgroundAndWalls(count%width);
+    image(bird, xpos, ypos);
+    vy += gravity;
+    ypos += vy;
+    if (ypos > height - bird.height) {
+      lose = true;
+    }
+    checkTouch();
+    text("SCORE: "+score, width - 200, 30);
+    //change scene depending on the score
+    if (lose) {
+      if (score>=10) {
+        scene = Scene.CONGRATSMINIONSSCENE;
+      } else {
+        scene = Scene.CRYINGMEMESCENE;
+      }
+    }
     break;
   case CONGRATSMINIONSSCENE:
     image(congratsMinions, 0, 0);
@@ -174,8 +252,39 @@ void draw() {
   case ZHONGKAO2SCENE:
     image(zhongkao2, 0, 0);
     break;
+  case RULE2SCENE:
+    image(rule2, 0, 0);
+    break;
   case BOOKBACKGROUNDSCENE:
-    image(bookbackground, 0, 0);
+    frameRate(10);
+    if ( isSnakeDie() ) {
+      return;
+    }
+    background(#d2eaff);
+    switch(snakeDirection) {
+    case 'L':
+      snakeHeadX -= w;
+      break;
+    case 'R':
+      snakeHeadX += w;
+      break;
+    case 'D':
+      snakeHeadY += w;
+      break;
+    case 'U':
+      snakeHeadY -= w;
+      break;
+    }
+
+    drawFood(width, height);
+    drawSnake();
+
+    //get the food==true
+    if ( snakeHeadX == foodX && snakeHeadY == foodY ) {
+      snakeLength++;
+      foodKey = true;
+    }
+
     break;
   case WAITASECPANDAHEADANOTHERSCENE:
     image(waitASecPandaHead, 0, 0);
@@ -273,6 +382,480 @@ void draw() {
   }
 }
 
+//bird scene function
+void drawBackgroundAndWalls(int offset) {
+  background(0);
+  image(background, -offset, 0);
+  image(background, width-offset, 0);
+
+  drawWalls(width-offset);
+  if (count > 800) {
+    drawWalls(-offset);
+  }
+}
+
+void drawWalls(int offset) {
+  for (int i = 0; i<4; i++) {
+    drawPairOfWalls(offset + 200*i, i, wallsOffset[i]);
+  }
+}
+
+void drawPairOfWalls(int xPos, int i, float offset) {
+  pushMatrix();
+  rotate(PI);
+  image(wall, -xPos-50, - 200 - offset);
+  popMatrix();
+  image(wall, xPos, height/2+150 + offset);
+  if (xPos == xpos - wall.width && !lose) {
+    score++;
+  }
+  if (xPos > 0 && xPos < width) {
+    walls[i] = new WallPair(xPos, 200+offset, height/2+150 + offset);
+  }
+}
+
+void checkTouch() {
+  for (WallPair pair : walls) {
+    if (pair!=null) {
+      if ((ypos < pair.y1 && xpos > pair.x && xpos < pair.x+wall.width) || (ypos > pair.y2 && xpos > pair.x && xpos < pair.x+wall.width)) {
+        println(ypos);
+        lose = true;
+      }
+    }
+  }
+}
+
+void reset() {
+  lose = false;
+  count = 300;
+  ypos = 50;
+  score = 0;
+  vy = 0;
+  for (int i = 0; i < wallsOffset.length; i++) {
+    wallsOffset[i] = random(-100, 100);
+  }
+}
+
+//end bird scene function
+
+//snake scene
+void snakeInit() {
+  snakeLength = 1;
+  gameOverKey = false;
+  snakeHeadX = 0;
+  snakeHeadY = 0;
+  snakeDirection = 'R';
+}
+
+void drawSnake() {
+  for (int i=snakeLength-1; i>0; i--) {
+    x[i] = x[i-1];
+    y[i] = y[i-1];
+  }
+
+  y[0] = snakeHeadY;
+  x[0] = snakeHeadX;
+
+  fill(#79FABA);
+
+  for (int i=0; i<snakeLength; i++) {
+    rect(x[i], y[i], w, h);
+  }
+}
+
+void drawFood(int maxWidth, int maxHeight) {
+  fill(#FF7984);
+
+  //produce a new one randomly when snake gets one
+  if ( foodKey ) {
+    foodX = int(random(0, maxWidth)/w) * w;
+    foodY = int(random(0, maxHeight)/h) * h;
+  }
+
+  rect(foodX, foodY, w, h);
+
+  foodKey = false;
+}
+
+//what to do when games over, gonna have scene changing here
+void showGameOver() {
+  scene = Scene.WAITASECPANDAHEADANOTHERSCENE;
+}
+
+boolean isSnakeDie() {
+  // crush the wall
+  if ( snakeHeadX < 0 || snakeHeadX >= width || snakeHeadY < 0 || snakeHeadY >= height) {
+    showGameOver();
+    return true;
+  }
+
+  // eat itself
+  if ( snakeLength > 2 ) {
+    for ( int i=1; i<snakeLength; i++ ) {
+      if ( snakeHeadX == x[i] && snakeHeadY == y[i] ) {
+        showGameOver();
+        return true;
+      }
+    }
+  }
+  return false;
+}
+//end of snake scene
+
+void keyPressed() {
+  switch (scene) {
+  case INTROSCENE:
+
+    break;
+  case YOUNGMESCENE:
+
+    break;
+  case YOUNGEMEANDBROSSCENE:
+
+    break;
+  case TVSCENE:
+
+    break;
+  case RULE1SCENE:
+
+    break;
+  case BACKGROUNDSCENE:
+    vy = -8.0;
+    break;
+  case CONGRATSMINIONSSCENE:
+
+    break;
+  case CRYINGMEMESCENE:
+
+    break;
+  case TVSPONGEBOBSCENE:
+
+    break;
+  case TVTIGASCENE:
+
+    break;
+  case TVKITCHENERSCENE:
+
+    break;
+  case WAITASECPANDAHEADSCENE:
+
+    break;
+  case CANTONTOWERSCENE:
+
+    break;
+  case HAPPYMINIONSSCENE:
+
+    break;
+  case HOLDBABEBROSCENE:
+
+    break;
+  case BABYBROSITTINGSCENE:
+
+    break;
+  case BABYBROKISSINGSCENE:
+
+    break;
+  case ZHONGKAO0SCENE:
+
+    break;
+  case ZHONGKAO1SCENE:
+
+    break;
+  case ZHONGKAO2SCENE:
+
+    break;
+  case RULE2SCENE:
+
+    break;
+  case BOOKBACKGROUNDSCENE:
+    //change snake moving direction
+    if (keyPressed && key == CODED) {
+      switch(keyCode) {
+      case LEFT:
+        if (snakeDirection != 'R') {
+          snakeDirection = 'L';
+        }
+        break;
+      case RIGHT:
+        if (snakeDirection != 'L') {
+          snakeDirection = 'R';
+        }
+        break;
+      case DOWN:
+        if (snakeDirection != 'U') {
+          snakeDirection = 'D';
+        }
+        break;
+      case UP:
+        if (snakeDirection != 'D') {
+          snakeDirection = 'U';
+        }
+        break;
+      }
+    }
+
+
+    break;
+  case WAITASECPANDAHEADANOTHERSCENE:
+
+    break;
+  case JERRYREADING0SCENE:
+
+    break;
+  case JERRYREADING1SCENE:
+
+    break;
+  case JERRYREADING2SCENE:
+
+    break;
+  case TOMANDJERRYREADINGSCENE:
+
+    break;
+  case TESTSATSCENE:
+
+    break;
+  case INTERNSCENE:
+
+    break;
+  case OFFERSCENE:
+
+    break;
+  case UCSBCONFIRMEDSCENE:
+
+    break;
+  case QUESTIONPANDAHEAD0SCENE:
+
+    break;
+  case QUESTIONPANDAHEAD1SCENE:
+
+    break;
+  case NOPANDAHEAD0SCENE:
+
+    break;
+  case NOPANDAHEAD1SCENE:
+
+    break;
+  case NOPANDAHEAD2SCENE:
+
+    break;
+  case ZOOMSCENE:
+
+    break;
+  case CANTONTOWERDAYVIEWSCENE:
+
+    break;
+  case SUITECASESCENE:
+
+    break;
+  case PASSPORTSCENE:
+
+    break;
+  case LAXVIEWSCENE:
+
+    break;
+  case UCSBLIFESCENE:
+
+    break;
+  case PAINTINGSCENE:
+
+    break;
+  case WAITASECPANDAHEAD1SCENE:
+
+    break;
+  case GIRLSNIGHTSCENE:
+
+    break;
+  case GAYCRUSH0SCENE:
+
+    break;
+  case GAYCRUSH1SCENE:
+
+    break;
+  case GAYCRUSH2SCENE:
+
+    break;
+  case GAYCRUSH3SCENE:
+
+    break;
+  case CUTEGUYSCHECKSCENE:
+
+    break;
+  case WAITASECPANDAHEAD1ANOTHERSCENE:
+
+    break;
+  case THANKUMINIONSSCENE:
+
+    break;
+  case THEENDSCENE:
+
+    break;
+  }
+}
+
+void keyReleased() {
+  switch (scene) {
+  case INTROSCENE:
+
+    break;
+  case YOUNGMESCENE:
+
+    break;
+  case YOUNGEMEANDBROSSCENE:
+
+    break;
+  case TVSCENE:
+
+    break;
+  case RULE1SCENE:
+
+    break;
+  case BACKGROUNDSCENE:
+    vy = gravity;
+    break;
+  case CONGRATSMINIONSSCENE:
+
+    break;
+  case CRYINGMEMESCENE:
+
+    break;
+  case TVSPONGEBOBSCENE:
+
+    break;
+  case TVTIGASCENE:
+
+    break;
+  case TVKITCHENERSCENE:
+
+    break;
+  case WAITASECPANDAHEADSCENE:
+
+    break;
+  case CANTONTOWERSCENE:
+
+    break;
+  case HAPPYMINIONSSCENE:
+
+    break;
+  case HOLDBABEBROSCENE:
+
+    break;
+  case BABYBROSITTINGSCENE:
+
+    break;
+  case BABYBROKISSINGSCENE:
+
+    break;
+  case ZHONGKAO0SCENE:
+
+    break;
+  case ZHONGKAO1SCENE:
+
+    break;
+  case ZHONGKAO2SCENE:
+
+    break;
+  case RULE2SCENE:
+
+    break;
+  case BOOKBACKGROUNDSCENE:
+
+    break;
+  case WAITASECPANDAHEADANOTHERSCENE:
+
+    break;
+  case JERRYREADING0SCENE:
+
+    break;
+  case JERRYREADING1SCENE:
+
+    break;
+  case JERRYREADING2SCENE:
+
+    break;
+  case TOMANDJERRYREADINGSCENE:
+
+    break;
+  case TESTSATSCENE:
+
+    break;
+  case INTERNSCENE:
+
+    break;
+  case OFFERSCENE:
+
+    break;
+  case UCSBCONFIRMEDSCENE:
+
+    break;
+  case QUESTIONPANDAHEAD0SCENE:
+
+    break;
+  case QUESTIONPANDAHEAD1SCENE:
+
+    break;
+  case NOPANDAHEAD0SCENE:
+
+    break;
+  case NOPANDAHEAD1SCENE:
+
+    break;
+  case NOPANDAHEAD2SCENE:
+
+    break;
+  case ZOOMSCENE:
+
+    break;
+  case CANTONTOWERDAYVIEWSCENE:
+
+    break;
+  case SUITECASESCENE:
+
+    break;
+  case PASSPORTSCENE:
+
+    break;
+  case LAXVIEWSCENE:
+
+    break;
+  case UCSBLIFESCENE:
+
+    break;
+  case PAINTINGSCENE:
+
+    break;
+  case WAITASECPANDAHEAD1SCENE:
+
+    break;
+  case GIRLSNIGHTSCENE:
+
+    break;
+  case GAYCRUSH0SCENE:
+
+    break;
+  case GAYCRUSH1SCENE:
+
+    break;
+  case GAYCRUSH2SCENE:
+
+    break;
+  case GAYCRUSH3SCENE:
+
+    break;
+  case CUTEGUYSCHECKSCENE:
+
+    break;
+  case WAITASECPANDAHEAD1ANOTHERSCENE:
+
+    break;
+  case THANKUMINIONSSCENE:
+
+    break;
+  case THEENDSCENE:
+
+    break;
+  }
+}
+
 void mouseClicked() {
   switch (scene) {
   case INTROSCENE:
@@ -296,23 +879,22 @@ void mouseClicked() {
     if (mouseX<width/2) {
       scene = Scene.YOUNGEMEANDBROSSCENE;
     } else {
+      scene = Scene.RULE1SCENE;
+    }
+    break;
+  case RULE1SCENE:
+    if (mouseX<width/2) {
+      scene = Scene.TVSCENE;
+    } else {
+      reset();
       scene = Scene.BACKGROUNDSCENE;
     }
     break;
   case BACKGROUNDSCENE:
-    //gonna put the flipped remote game here later
-    if (mouseX<width/2) {
-      scene = Scene.CRYINGMEMESCENE;
-    } else {
-      scene = Scene.CONGRATSMINIONSSCENE;
-    }
+
     break;
   case CONGRATSMINIONSSCENE:
-    if (mouseX<width/2) {
-      scene = Scene.BACKGROUNDSCENE;
-    } else {
-      scene = Scene.TVSPONGEBOBSCENE;
-    }
+    scene = Scene.TVSPONGEBOBSCENE;
     break;
   case CRYINGMEMESCENE:
     if (mouseX<width/2) {
@@ -322,6 +904,7 @@ void mouseClicked() {
         scene = Scene.TVKITCHENERSCENE;
       }
     } else {
+      reset();
       scene = Scene.BACKGROUNDSCENE;
     }
     break;
@@ -348,6 +931,7 @@ void mouseClicked() {
     break;
   case WAITASECPANDAHEADSCENE:
     if (mouseX<width/2) {
+      reset();
       scene = Scene.BACKGROUNDSCENE;
     } else {
       scene = Scene.CANTONTOWERSCENE;
@@ -406,18 +990,23 @@ void mouseClicked() {
     if (mouseX<width/2) {
       scene = Scene.ZHONGKAO1SCENE;
     } else {
+      scene = Scene.RULE2SCENE;
+    }
+    break;
+  case RULE2SCENE:
+    if (mouseX<width/2) {
+      scene = Scene.ZHONGKAO2SCENE;
+    } else {
+      snakeInit();
       scene = Scene.BOOKBACKGROUNDSCENE;
     }
     break;
   case BOOKBACKGROUNDSCENE:
-    if (mouseX<width/2) {
-      scene = Scene.ZHONGKAO2SCENE;
-    } else {
-      scene = Scene.WAITASECPANDAHEADANOTHERSCENE;
-    }
+
     break;
   case WAITASECPANDAHEADANOTHERSCENE:
     if (mouseX<width/2) {
+      snakeInit();
       scene = Scene.BOOKBACKGROUNDSCENE;
     } else {
       scene = Scene.JERRYREADING0SCENE;
@@ -646,6 +1235,9 @@ switch (scene) {
  case TVSCENE:
  
  break;
+ case RULE1SCENE:
+ 
+ break;
  case BACKGROUNDSCENE:
  
  break;
@@ -689,6 +1281,9 @@ switch (scene) {
  
  break;
  case ZHONGKAO2SCENE:
+ 
+ break;
+ case case RULE2SCENE::
  
  break;
  case BOOKBACKGROUNDSCENE:
