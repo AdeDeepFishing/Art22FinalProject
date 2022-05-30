@@ -5,7 +5,7 @@
  * by Yanwen Chen
  *
  * Initiated: 5/22/22
- * Last updated: 5/26/22
+ * Last updated: 5/29/22
  *
  * CITATIONS:
  *   IMAGES:
@@ -40,7 +40,7 @@
  *      https://www.youtube.com/watch?v=CD4qAhfFuLo
  *
  *
- * NOTE:
+ * NOTE: You can find the Bibliography and the statement in the big folder.
  *
  * Instruction: Click the screen and follow the instructions when needed
  *
@@ -131,7 +131,7 @@ void setup() {
   zhongkao1=loadImage("Untitled_Artwork 38.png");
   zhongkao2=loadImage("Untitled_Artwork 37.png");
   rule2=loadImage("Untitled_Artwork 36.png");
-  
+
   //snake scene
   noStroke();
   //end of snake scene
