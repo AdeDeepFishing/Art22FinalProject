@@ -5,7 +5,7 @@
  * by Yanwen Chen
  *
  * Initiated: 5/22/22
- * Last updated: 5/29/22
+ * Last updated: 5/26/22
  *
  * CITATIONS:
  *   IMAGES:
@@ -42,7 +42,7 @@
  *
  * NOTE:
  *
- * INSTRUCTION: Click the screen and follow the instructions when needed
+ * Instruction: Click the screen and follow the instructions when needed
  *
  *
  * */
@@ -64,7 +64,6 @@ int score = 0;
 PFont flappyFont;
 float[] wallsOffset = new float[4];
 //end of bird scene
-
 
 //snake scene
 //snake size
@@ -91,7 +90,7 @@ enum Scene {
   INTROSCENE, YOUNGMESCENE, YOUNGEMEANDBROSSCENE, TVSCENE, RULE1SCENE, BACKGROUNDSCENE, CONGRATSMINIONSSCENE, CRYINGMEMESCENE, TVSPONGEBOBSCENE, TVTIGASCENE, TVKITCHENERSCENE, WAITASECPANDAHEADSCENE, CANTONTOWERSCENE, HAPPYMINIONSSCENE, HOLDBABEBROSCENE, BABYBROSITTINGSCENE, BABYBROKISSINGSCENE, ZHONGKAO0SCENE, ZHONGKAO1SCENE, ZHONGKAO2SCENE, RULE2SCENE, BOOKBACKGROUNDSCENE, WAITASECPANDAHEADANOTHERSCENE, JERRYREADING0SCENE, JERRYREADING1SCENE, JERRYREADING2SCENE, TOMANDJERRYREADINGSCENE, TESTSATSCENE, INTERNSCENE, OFFERSCENE, UCSBCONFIRMEDSCENE, QUESTIONPANDAHEAD0SCENE, QUESTIONPANDAHEAD1SCENE, NOPANDAHEAD0SCENE, NOPANDAHEAD1SCENE, NOPANDAHEAD2SCENE, ZOOMSCENE, CANTONTOWERDAYVIEWSCENE, SUITECASESCENE, PASSPORTSCENE, LAXVIEWSCENE, UCSBLIFESCENE, PAINTINGSCENE, WAITASECPANDAHEAD1SCENE, GIRLSNIGHTSCENE, GAYCRUSH0SCENE, GAYCRUSH1SCENE, GAYCRUSH2SCENE, GAYCRUSH3SCENE, CUTEGUYSCHECKSCENE, WAITASECPANDAHEAD1ANOTHERSCENE, THANKUMINIONSSCENE, THEENDSCENE;
 };
 
-//start with introscene
+//start with the intro one
 Scene scene = Scene.INTROSCENE;
 
 void setup() {
@@ -132,6 +131,7 @@ void setup() {
   zhongkao1=loadImage("Untitled_Artwork 38.png");
   zhongkao2=loadImage("Untitled_Artwork 37.png");
   rule2=loadImage("Untitled_Artwork 36.png");
+  
   //snake scene
   noStroke();
   //end of snake scene
@@ -259,6 +259,7 @@ void draw() {
       return;
     }
     background(#d2eaff);
+    //snake position changing depend on the direction
     switch(snakeDirection) {
     case 'L':
       snakeHeadX -= w;
@@ -591,7 +592,6 @@ void keyPressed() {
         break;
       }
     }
-
 
     break;
   case WAITASECPANDAHEADANOTHERSCENE:
